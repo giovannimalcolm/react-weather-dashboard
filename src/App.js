@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './css/bootstrap.min.css';
+import './css/style.css';
 
 function App() {
   return (
     <div className="App">
-    <header className="main-header">
+    <div className="main-header">
       <h1>Weather Dashboard</h1>
-    </header>
-
-    <div className="container-fluid" style="max-width: 1400px">
+    </div>
+    <div className="container-fluid" style={{maxWidth: '1400px'}}>
       <div className="row">
         <aside className="col-lg-3 pb-3">
           <h2 id="sidebar-title">Search for a City:</h2>
@@ -44,24 +42,9 @@ function App() {
         </div>
       </div>
     </div>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/dayjs.min.js"
-      integrity="sha512-0fcCRl828lBlrSCa8QJY51mtNqTcHxabaXVLPgw/jPA5Nutujh6CbTdDgRzl9aSPYW/uuE7c4SffFUQFBAy6lg=="
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/plugin/utc.min.js"
-      integrity="sha512-m00bfmYnAl3plEBlQfeQUhw/U2uvmw29V2+jxSWpAjankMWS+zAsjezbKWDEJNXqWq9o9qQZSOiA2RKDpa4D5w=="
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.10.4/plugin/timezone.min.js"
-      integrity="sha512-pslqxxHAYPCxaSeFSmXXxDkLejD5dbFVC66aiVq0z4v7VTJBU+wqcG1OpNh4p3MjS2D6NCwz/H2QmSc7dXxryg=="
-      crossorigin="anonymous"
-    ></script>
-    <script src="./assets/js/script.js" async defer></script>
     </div>
   );
 }
+
 
 export default App;
