@@ -1,6 +1,24 @@
 import React, { Component } from 'react';
 
 export class Home extends Component {
+constructor(props){
+    super(props);
+    this.state = {
+        location: ""
+    };
+    this.locationChange = this.locationChange.bind(this);
+}
+
+locationChange(e){
+    this.setState({
+        location: e.target.value
+    });
+}
+
+componentDidUpdate(){
+    console.log(this.state)
+}
+
 
     render() {
         return (
@@ -21,6 +39,7 @@ export class Home extends Component {
                                         type="text"
                                         placeholder="City Here"
                                         id="city-input"
+                                        onChange={this.locationChange}
                                     />
 
                                     <div className="input-group-append"></div>

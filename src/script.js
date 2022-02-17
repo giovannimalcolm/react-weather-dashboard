@@ -1,8 +1,10 @@
 //API Linking
+import dayjs from 'dayjs';
 var weatherApiRootUrl = 'https://api.openweathermap.org';
 var weatherApiKey = 'd91f911bcf2c0f925fb6535547a5ddc9';
 var cityListApiRootUrl = 'https://api.mapbox.com';
 var cityListApiKey = 'pk.eyJ1IjoiZ2lvdmFubmlkbSIsImEiOiJja3praTUxcXkwa2F3MnVxa29ueDMzeTBkIn0.MUPEcujgw5Gic8LPSZiQ9Q';
+
 
 //Timezone plugins 
 dayjs.extend(window.dayjs_plugin_utc);
@@ -41,7 +43,7 @@ function addHistory(input) {
 
 //Renders history to page
 function printHistory() {
-    historyContainer.innerHTML = '';
+   // historyContainer.innerHTML = '';
     console.log(searchHistory)
     for (var i = searchHistory.length - 1; i >= 0; i--) {
         var historyItem = document.createElement('button');
