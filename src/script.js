@@ -112,7 +112,7 @@ function printTodaysWeather(name, weather, timezone) {
     uviEl.append(uviBox);
 
     boxContent.append(header, tempEl, windEl, humidityEl, uviEl);
-    todayContainer.innerHTML = '';
+    //todayContainer.innerHTML = '';
     todayContainer.append(boxContent);
 }
 
@@ -168,7 +168,7 @@ function printForecast(dailyData, timezone) {
     header.textContent = '5-Day Forecast:';
     fHeader.append(header);
 
-    forecastContainer.innerHTML = '';
+    //forecastContainer.innerHTML = '';
     forecastContainer.append(fHeader);
     for (var i = 0; i < dailyData.length; i++) {
     
