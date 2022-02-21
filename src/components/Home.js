@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {Weather} from '../components/TodaysWeather'
+import { getWeatherData } from '../service/getWeather';
+import { GetWeatherUrl } from '../service/getWeatherUrl';
 
 export class Home extends Component {
 constructor(props){
@@ -20,10 +23,12 @@ locationChange(e){
     });
 }
 
-_showWeather = (bool) => {
+_showWeather = async (bool) => {
     this.setState({
         showWeather: bool
     });
+    await getWeatherData(this.state.location)
+console.log(await GetWeatherUrl(this.state.location))
 }
 
 componentDidUpdate(){
@@ -67,19 +72,6 @@ componentDidUpdate(){
                             </form>
                             <div id="history"></div>
                         </aside>
-                        {this.state.showWeather &&
-                        <div className="col-lg-9 pb-3">
-                    <section id="presentDay" className="todaysWeather">
-                        <div className="todaysWeather-body">
-                            <h2 className="h3 today-title"> San Diego <img className="weather-img" src="https://openweathermap.org/img/w/03d.png" alt="scattered clouds" /></h2>
-                            <p className="today-txt">Temp: </p>
-                            <p className="today-txt">Wind: 11.5 MPH</p>
-                            <p className="today-txt">Humidity: 61 %</p>
-                            <p>UV  Index: <button className="uvi-btn wary-uvi">3.1</button>
-                            </p></div>
-                    </section>
-                    </div>
-                }
                     </div>
                 </div>
                 

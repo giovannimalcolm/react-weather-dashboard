@@ -1,38 +1,40 @@
-// import React, { Component } from 'react';
+import { GetWeatherUrl } from "../service/getWeatherUrl";
+import Axios from 'axios';
+import React, { Component } from 'react';
+export class Weather extends Component {
 
-// export class TodaysWeather extends Component {
-//     async componentDidMount() {
-//         const url = 'https://api.openweathermap.org';
-//         const response = await fetch(url);
-//         const data = await response.json();
-//         this.setState({ weather: data.results[0] });
-//         console.log(data)
-//     };
+    state = {
+        loading: true,
+        weather: []
+    }
 
-
-
-//     render() {
-//         return (
-//             <>
-//                 {this.state.loading || !this.state.weather ? (
-//                     <div> loading...</div>
-//                 ) : (
-//                     <section id="presentDay" className="todaysWeather">
-//                         <div className="todaysWeather-body">
-//                             <h2 className="h3 today-title"> San Diego <img className="weather-img" src="https://openweathermap.org/img/w/03d.png" alt="scattered clouds" /></h2>
-//                             <p className="today-txt">Temp: {this.state.weather.current.temp}</p>
-//                             <p className="today-txt">Wind: 11.5 MPH</p>
-//                             <p className="today-txt">Humidity: 61 %</p>
-//                             <p>UV  Index: <button className="uvi-btn wary-uvi">3.1</button>
-//                             </p></div>
-//                     </section>
+async componentDidMount(){
+    const res = await Axios.get(GetWeatherUrl());
+    this.setState({weather: res.data, loading: false})
+    console.log(this.state.weather);
+}
 
 
+render(){
+   
+    return( 
+        <div>
+            <div className="col-lg-9 pb-3">
+        <section id="presentDay" className="todaysWeather">
+            <div className="todaysWeather-body">
+                <h2 className="h3 today-title"> San Diego <img className="weather-img" src="https://openweathermap.org/img/w/03d.png" alt="scattered clouds" /></h2>
+                <p className="today-txt">Temp: </p>
+                <p className="today-txt">Wind: 11.5 MPH</p>
+                <p className="today-txt">Humidity: 61 %</p>
+                <p>UV  Index: <button className="uvi-btn wary-uvi">3.1</button>
+                </p></div>
+        </section>
+        </div>
+        </div>
 
+    )
 
-//                 )}
-//             </>
-//         )
-//     }
-// }
+}
+
+}
 
