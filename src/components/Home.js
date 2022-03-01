@@ -3,14 +3,18 @@ import {Weather} from '../components/TodaysWeather'
 import { getWeatherData } from '../service/getWeather';
 import { GetWeatherUrl } from '../service/getWeatherUrl';
 
+
 export class Home extends Component {
 constructor(props){
     super(props);
     this.state = {
         location: "",
-        showWeather: false
+        showWeather: false,
+        weatherData: []
     };
     this.locationChange = this.locationChange.bind(this);
+    this._showWeather = this._showWeather.bind(this);
+
 }
 
  onSubmit(e) {
@@ -23,12 +27,21 @@ locationChange(e){
     });
 }
 
+setWeather = async (location)=> {
+   const res = await getWeatherData(location)
+   console.log(res)
+    this.setState({
+        weatherData: res
+    });
+    console.log(this.state.weatherData)
+}
+
 _showWeather = async (bool) => {
+    console.log(this.state)
     this.setState({
         showWeather: bool
     });
-    await getWeatherData(this.state.location)
-console.log(await GetWeatherUrl(this.state.location))
+    console.log(this.state)
 }
 
 componentDidUpdate(){
@@ -48,7 +61,11 @@ componentDidUpdate(){
                         <aside className="col-lg-3 pb-3">
                             <h2 id="sidebar-title">Search for a City:</h2>
 
-                            <form onSubmit={e => this.onSubmit(e)} id="citySearch">
+                            <form onSubmit={e => {
+                                this.onSubmit(e)
+                                this.setWeather(this.state.location)
+                                this._showWeather(true)
+                                }} id="citySearch">
                                 <div className="input-group">
                                     <input
                                         className="form-control"
@@ -65,7 +82,6 @@ componentDidUpdate(){
                                     type="submit"
                                     className="btn btn-primary btn-block"
                                     id="sidebar-btn"
-                                    onClick={this._showWeather.bind(null,true)}
                                 >
                                     Search
                                 </button>
@@ -74,8 +90,7 @@ componentDidUpdate(){
                         </aside>
                     </div>
                 </div>
-                
-               
+               {this.state.showWeather && <Weather data={this.state.weatherData}/>}
             </div>
 
         )

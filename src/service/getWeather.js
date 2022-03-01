@@ -6,5 +6,6 @@ import { GetWeatherUrl } from './getWeatherUrl'
 export async function getWeatherData(loc) {
   const weatherUrl = await GetWeatherUrl(loc)
   const weatherUrlData = await Axios.get(weatherUrl);
+  console.log(weatherUrlData.data)
   return weatherUrlData.data
 }  

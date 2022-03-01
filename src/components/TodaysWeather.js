@@ -3,15 +3,10 @@ import Axios from 'axios';
 import React, { Component } from 'react';
 export class Weather extends Component {
 
-    state = {
-        loading: true,
-        weather: []
-    }
 
 async componentDidMount(){
-    const res = await Axios.get(GetWeatherUrl());
-    this.setState({weather: res.data, loading: false})
-    console.log(this.state.weather);
+  
+    console.log(this.props.data);
 }
 
 
@@ -37,4 +32,3 @@ render(){
 }
 
 }
-
