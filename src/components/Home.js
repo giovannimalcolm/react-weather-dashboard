@@ -1,101 +1,77 @@
-import React, { Component } from 'react';
-import {Weather} from '../components/TodaysWeather'
+import React, { useEffect, useState } from 'react';
+import { Weather } from '../components/TodaysWeather'
 import { getWeatherData } from '../service/getWeather';
 import { GetWeatherUrl } from '../service/getWeatherUrl';
 
 
-export class Home extends Component {
-constructor(props){
-    super(props);
-    this.state = {
-        location: "",
-        showWeather: false,
-        weatherData: []
+function Home(props) {
+
+    const [showWeather, setShowWeather] = useState(false);
+    const [input, setInput] = useState("");
+    const [data, setData] = useState([]);
+
+    const onSubmit = (e) => {
+        e.preventDefault();
     };
-    this.locationChange = this.locationChange.bind(this);
-    this._showWeather = this._showWeather.bind(this);
 
-}
+    const changeInputState = (e) => {
+        setInput(e.target.value);
+    };
 
- onSubmit(e) {
-    e.preventDefault();
-}
+    const getWeather= async(location) => {
+        setData(await getWeatherData(location)); 
+        setShowWeather(true);
+    };
 
-locationChange(e){
-    this.setState({
-        location: e.target.value
-    });
-}
+    useEffect(() => {
+        console.log(data);
+    }, [showWeather, data]);
 
-setWeather = async (location)=> {
-   const res = await getWeatherData(location)
-   console.log(res)
-    this.setState({
-        weatherData: res
-    });
-    console.log(this.state.weatherData)
-}
+    return (
+        <div>
+            <header className="main-header">
+                <h1>Weather Dashboard</h1>
+            </header>
 
-_showWeather = async (bool) => {
-    console.log(this.state)
-    this.setState({
-        showWeather: bool
-    });
-    console.log(this.state)
-}
+            <div className="container-fluid" style={{ maxWidth: '1400px' }}>
+                <div className="row">
+                    <aside className="col-lg-3 pb-3">
+                        <h2 id="sidebar-title">Search for a City:</h2>
 
-componentDidUpdate(){
-    console.log(this.state)
-}
+                        <form onSubmit={e => {
+                            onSubmit(e)
+                            getWeather(input)
+                        }} id="citySearch">
+                            <div className="input-group">
+                                <input
+                                    className="form-control"
+                                    type="text"
+                                    placeholder="City Here"
+                                    id="city-input"
+                                    onChange={changeInputState}
+                                />
 
+                                <div className="input-group-append"></div>
+                            </div>
 
-    render() {
-        return (
-            <div>
-                <header className="main-header">
-                    <h1>Weather Dashboard</h1>
-                </header>
-
-                <div className="container-fluid" style={{ maxWidth: '1400px' }}>
-                    <div className="row">
-                        <aside className="col-lg-3 pb-3">
-                            <h2 id="sidebar-title">Search for a City:</h2>
-
-                            <form onSubmit={e => {
-                                this.onSubmit(e)
-                                this.setWeather(this.state.location)
-                                this._showWeather(true)
-                                }} id="citySearch">
-                                <div className="input-group">
-                                    <input
-                                        className="form-control"
-                                        type="text"
-                                        placeholder="City Here"
-                                        id="city-input"
-                                        onChange={this.locationChange }
-                                    />
-
-                                    <div className="input-group-append"></div>
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary btn-block"
-                                    id="sidebar-btn"
-                                >
-                                    Search
-                                </button>
-                            </form>
-                            <div id="history"></div>
-                        </aside>
-                    </div>
+                            <button
+                                type="submit"
+                                className="btn btn-primary btn-block"
+                                id="sidebar-btn"
+                            >
+                                Search
+                            </button>
+                        </form>
+                        <div id="history"></div>
+                    </aside>
                 </div>
-               {this.state.showWeather && <Weather data={this.state.weatherData}/>}
             </div>
-
-        )
-
-
-    }
+            {showWeather && <Weather/>}
+        </div>
+    );
 
 }
+
+export {
+
+    Home}
