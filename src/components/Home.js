@@ -9,6 +9,8 @@ function Home(props) {
     const [showWeather, setShowWeather] = useState(false);
     const [input, setInput] = useState("");
     const [data, setData] = useState([]);
+    const [submission, setSubmission] = useState("")
+    
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -23,8 +25,13 @@ function Home(props) {
         setShowWeather(true);
     };
 
+    const saveSubmission = (input) => {
+       return (input.split(',').shift())
+    }
+
     useEffect(() => {
         console.log(data);
+        
     }, [showWeather, data]);
 
     return (
@@ -41,6 +48,7 @@ function Home(props) {
                         <form onSubmit={e => {
                             onSubmit(e)
                             getWeather(input)
+                            setSubmission(saveSubmission(input))
                         }} id="citySearch">
                             <div className="input-group">
                                 <input
@@ -66,7 +74,17 @@ function Home(props) {
                     </aside>
                 </div>
             </div>
-            {showWeather && <Weather/>}
+            {showWeather && 
+            <Weather 
+            temp ={data.current.temp} 
+            wind_speed={data.current.wind_speed}
+            humidity = {data.current.humidity}
+            uvi ={data.current.uvi} 
+            cityName ={submission}
+            icon = {data.current.weather[0].icon}
+            alt = {data.current.weather[0].description}
+            />
+            }
         </div>
     );
 
