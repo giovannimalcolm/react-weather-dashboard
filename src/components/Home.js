@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Weather } from '../components/TodaysWeather'
 import { getWeatherData } from '../service/getWeather';
 import { GetWeatherUrl } from '../service/getWeatherUrl';
+import { dateConvert } from '../utils/dateConvert';
+import { Forecast } from './Forecast';
 
 
 function Home(props) {
@@ -10,7 +12,7 @@ function Home(props) {
     const [input, setInput] = useState("");
     const [data, setData] = useState([]);
     const [submission, setSubmission] = useState("")
-    
+
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -20,18 +22,18 @@ function Home(props) {
         setInput(e.target.value);
     };
 
-    const getWeather= async(location) => {
-        setData(await getWeatherData(location)); 
+    const getWeather = async (location) => {
+        setData(await getWeatherData(location));
         setShowWeather(true);
     };
 
     const saveSubmission = (input) => {
-       return (input.split(',').shift())
+        return (input.split(',').shift())
     }
 
     useEffect(() => {
         console.log(data);
-        
+
     }, [showWeather, data]);
 
     return (
@@ -74,22 +76,40 @@ function Home(props) {
                     </aside>
                 </div>
             </div>
-            {showWeather && 
-            <Weather 
-            temp ={data.current.temp} 
-            wind_speed={data.current.wind_speed}
-            humidity = {data.current.humidity}
-            uvi ={data.current.uvi} 
-            cityName ={submission}
-            icon = {data.current.weather[0].icon}
-            alt = {data.current.weather[0].description}
-            />
+            {showWeather &&
+                <Weather
+                    temp={data.current.temp}
+                    wind_speed={data.current.wind_speed}
+                    humidity={data.current.humidity}
+                    uvi={data.current.uvi}
+                    cityName={submission}
+                    icon={data.current.weather[0].icon}
+                    alt={data.current.weather[0].description}
+                />
             }
+
+            {showWeather && data.daily.map((day, index) => {
+                if (index > 0 && index <= 5) { 
+                return(
+                    <Forecast
+                    key={index}
+                    temp ={day.temp.day}
+                    humidity ={day.humidity}
+                    wind_speed ={day.wind_speed}
+                    icon ={day.weather[0].icon}
+                    alt ={day.weather[0].description}
+                    timezone = {day.timezone}
+                    date= {day.dt}
+                    />
+                )
+                }})}
+         
         </div>
     );
-
+                
 }
 
 export {
 
-    Home}
+    Home
+}

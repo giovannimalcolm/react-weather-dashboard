@@ -1,6 +1,4 @@
-import { GetWeatherUrl } from "../service/getWeatherUrl";
-import Axios from 'axios';
-import React, { useState } from 'react';
+import React from 'react';
 import { uviColorFind } from "../uviColorFinder";
 
 function Weather (props) {
