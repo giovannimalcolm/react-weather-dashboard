@@ -5,7 +5,7 @@ function Weather (props) {
    let uviColor =  uviColorFind(props.uvi)
     return( 
         <div>
-            <div className="col-lg-9 pb-3">
+            
         <section id="presentDay" className="todaysWeather">
             <div className="todaysWeather-body">
                 <h2 className="h3 today-title"> {props.cityName} <img className="weather-img" src={"https://openweathermap.org/img/w/" + props.icon + ".png"} alt= {props.alt} /></h2>
@@ -15,7 +15,6 @@ function Weather (props) {
                 <p>UV  Index: <button className={"uvi-btn " + uviColor}>{props.uvi}</button>
                 </p></div>
         </section>
-        </div>
         </div>
     )
 

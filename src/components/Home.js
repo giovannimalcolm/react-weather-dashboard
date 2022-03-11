@@ -74,39 +74,49 @@ function Home(props) {
                         </form>
                         <div id="history"></div>
                     </aside>
+                    <div className="col-lg-9 pb-3">
+                        {showWeather &&
+                            <Weather
+                                temp={data.current.temp}
+                                wind_speed={data.current.wind_speed}
+                                humidity={data.current.humidity}
+                                uvi={data.current.uvi}
+                                cityName={submission}
+                                icon={data.current.weather[0].icon}
+                                alt={data.current.weather[0].description}
+                            />
+                        }
+<section id="weekly" class="weeklyForecast row">
+   {showWeather &&  <div className="col-12"><h4>5-Day Forecast</h4></div>
+}
+                        {showWeather && data.daily.map((day, index) => {
+                            if (index > 0 && index <= 5) {
+                                return (
+                                    <Forecast
+                                        key={index}
+                                        temp={day.temp.day}
+                                        humidity={day.humidity}
+                                        wind_speed={day.wind_speed}
+                                        icon={day.weather[0].icon}
+                                        alt={day.weather[0].description}
+                                        timezone={day.timezone}
+                                        date={day.dt}
+                                    />
+                                )
+                            }
+                        })}
+                        </section>
+
+                    </div>
                 </div>
             </div>
-            {showWeather &&
-                <Weather
-                    temp={data.current.temp}
-                    wind_speed={data.current.wind_speed}
-                    humidity={data.current.humidity}
-                    uvi={data.current.uvi}
-                    cityName={submission}
-                    icon={data.current.weather[0].icon}
-                    alt={data.current.weather[0].description}
-                />
-            }
 
-            {showWeather && data.daily.map((day, index) => {
-                if (index > 0 && index <= 5) { 
-                return(
-                    <Forecast
-                    key={index}
-                    temp ={day.temp.day}
-                    humidity ={day.humidity}
-                    wind_speed ={day.wind_speed}
-                    icon ={day.weather[0].icon}
-                    alt ={day.weather[0].description}
-                    timezone = {day.timezone}
-                    date= {day.dt}
-                    />
-                )
-                }})}
-         
+
+
+
         </div>
     );
-                
+
 }
 
 export {
