@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Weather } from '../components/TodaysWeather'
 import { getWeatherData } from '../service/getWeather';
-import { GetWeatherUrl } from '../service/getWeatherUrl';
-import { dateConvert } from '../utils/dateConvert';
 import { Forecast } from './Forecast';
+import { History } from './History';
+
 
 
 function Home(props) {
@@ -12,7 +12,18 @@ function Home(props) {
     const [input, setInput] = useState("");
     const [data, setData] = useState([]);
     const [submission, setSubmission] = useState("")
+    const initialHistory = JSON.parse(localStorage.getItem('history')) || [];
+    let [history, setHistory] = useState(initialHistory);
 
+     const setLocalStorage = (item) => {
+        const hist = JSON.parse(localStorage.getItem('history')) || [];
+        if (hist.indexOf(item) != -1){
+            hist.splice(hist.indexOf(item),1)
+        }
+        hist.push(item)
+        localStorage.setItem('history', JSON.stringify(hist))
+        setHistory(hist);
+    }
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -32,9 +43,14 @@ function Home(props) {
     }
 
     useEffect(() => {
-        console.log(data);
+        console.log(history);
 
-    }, [showWeather, data]);
+    }, [showWeather, data, history]);
+
+    useEffect(() => {
+        setHistory(JSON.parse(localStorage.getItem('history')))
+        console.log(history)
+    }, []);
 
     return (
         <div>
@@ -51,6 +67,7 @@ function Home(props) {
                             onSubmit(e)
                             getWeather(input)
                             setSubmission(saveSubmission(input))
+                            setLocalStorage(input)
                         }} id="citySearch">
                             <div className="input-group">
                                 <input
@@ -72,7 +89,18 @@ function Home(props) {
                                 Search
                             </button>
                         </form>
-                        <div id="history"></div>
+                        <div id="history">
+                            {initialHistory.length && history.map((searchItem, index) => {
+                                if (index >=0 && index <=4){
+                                return(
+                                    <History
+                                    key ={index}
+                                    history = {searchItem}
+                                    />
+                                )
+                            }
+                            })}
+                        </div>
                     </aside>
                     <div className="col-lg-9 pb-3">
                         {showWeather &&
@@ -86,7 +114,7 @@ function Home(props) {
                                 alt={data.current.weather[0].description}
                             />
                         }
-<section id="weekly" class="weeklyForecast row">
+<section id="weekly" className="weeklyForecast row">
    {showWeather &&  <div className="col-12"><h4>5-Day Forecast</h4></div>
 }
                         {showWeather && data.daily.map((day, index) => {
@@ -120,6 +148,5 @@ function Home(props) {
 }
 
 export {
-
     Home
 }

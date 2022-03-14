@@ -5,9 +5,6 @@ import { Home } from './components/Home'
 //import { script } from './script'
 
 
-
-
-
 function App() {
   
 return (
