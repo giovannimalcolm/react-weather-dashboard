@@ -6,7 +6,7 @@ import { History } from './History';
 
 
 
-function Home(props) {
+function Home() {
 
     const [showWeather, setShowWeather] = useState(false);
     const [input, setInput] = useState("");
@@ -20,7 +20,10 @@ function Home(props) {
         if (hist.indexOf(item) != -1){
             hist.splice(hist.indexOf(item),1)
         }
-        hist.push(item)
+        if (hist.length > 4){
+            hist.pop();
+        }
+        hist.unshift(item);
         localStorage.setItem('history', JSON.stringify(hist))
         setHistory(hist);
     }
@@ -44,13 +47,17 @@ function Home(props) {
 
     useEffect(() => {
         console.log(history);
-
+        console.log(data)
     }, [showWeather, data, history]);
 
     useEffect(() => {
         setHistory(JSON.parse(localStorage.getItem('history')))
         console.log(history)
     }, []);
+
+    const changeSubmission = (input) =>{
+        setSubmission(saveSubmission(input));
+    }
 
     return (
         <div>
@@ -66,7 +73,7 @@ function Home(props) {
                         <form onSubmit={e => {
                             onSubmit(e)
                             getWeather(input)
-                            setSubmission(saveSubmission(input))
+                            changeSubmission(input)
                             setLocalStorage(input)
                         }} id="citySearch">
                             <div className="input-group">
@@ -96,6 +103,9 @@ function Home(props) {
                                     <History
                                     key ={index}
                                     history = {searchItem}
+                                    getWeather = {getWeather}
+                                    changeSubmission = {setSubmission}
+                                    setLocalStorage = {setLocalStorage}
                                     />
                                 )
                             }
@@ -138,10 +148,6 @@ function Home(props) {
                     </div>
                 </div>
             </div>
-
-
-
-
         </div>
     );
 
