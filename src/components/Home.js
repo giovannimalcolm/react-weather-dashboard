@@ -3,6 +3,7 @@ import { Weather } from '../components/TodaysWeather'
 import { getWeatherData } from '../service/getWeather';
 import { Forecast } from './Forecast';
 import { History } from './History';
+import { fetchPlace } from '../utils/fetchPlace';
 
 
 
@@ -15,12 +16,27 @@ function Home() {
     const initialHistory = JSON.parse(localStorage.getItem('history')) || [];
     let [history, setHistory] = useState(initialHistory);
 
-     const setLocalStorage = (item) => {
+
+    const [autocompleteCities, setAutocompleteCities] = useState([]);
+    const [autocompleteErr, setAutocompleteErr] = useState("");
+
+    const handleInputChange = async (e) => {
+        setInput(e.target.value);
+        if (!input) return;
+    
+        const res = await fetchPlace(input);
+        !autocompleteCities.includes(e.target.value) &&
+          res.features &&
+          setAutocompleteCities(res.features.map((place) => place.place_name));
+        res.error ? setAutocompleteErr(res.error) : setAutocompleteErr("");
+      };
+
+    const setLocalStorage = (item) => {
         const hist = JSON.parse(localStorage.getItem('history')) || [];
-        if (hist.indexOf(item) != -1){
-            hist.splice(hist.indexOf(item),1)
+        if (hist.indexOf(item) != -1) {
+            hist.splice(hist.indexOf(item), 1)
         }
-        if (hist.length > 4){
+        if (hist.length > 4) {
             hist.pop();
         }
         hist.unshift(item);
@@ -30,10 +46,6 @@ function Home() {
 
     const onSubmit = (e) => {
         e.preventDefault();
-    };
-
-    const changeInputState = (e) => {
-        setInput(e.target.value);
     };
 
     const getWeather = async (location) => {
@@ -55,7 +67,7 @@ function Home() {
         console.log(history)
     }, []);
 
-    const changeSubmission = (input) =>{
+    const changeSubmission = (input) => {
         setSubmission(saveSubmission(input));
     }
 
@@ -76,39 +88,53 @@ function Home() {
                             changeSubmission(input)
                             setLocalStorage(input)
                         }} id="citySearch">
-                            <div className="input-group">
-                                <input
-                                    className="form-control"
-                                    type="text"
-                                    placeholder="City Here"
-                                    id="city-input"
-                                    onChange={changeInputState}
-                                />
-
-                                <div className="input-group-append"></div>
-                            </div>
-
-                            <button
-                                type="submit"
-                                className="btn btn-primary btn-block"
-                                id="sidebar-btn"
-                            >
-                                Search
-                            </button>
+                                    <label htmlFor="city" className="label">
+                                        Your city
+                                        {autocompleteErr && (
+                                            <span className="inputError">{autocompleteErr}</span>
+                                        )}
+                                    </label>
+                                    <input
+                                        className="form-control"
+                                        type="text"
+                                        placeholder="City Here"
+                                        id="city"
+                                        name="city"
+                                        value={input}
+                                        required
+                                        pattern={autocompleteCities.join("|")}
+                                        autoComplete="off"
+                                        list="places"
+                                        onChange={ handleInputChange }
+                                    />
+                                    <datalist id="places">
+                                        {autocompleteCities.map((input, i) => (
+                                            <option key={i}>{input}</option>
+                                        ))}
+                                    </datalist>
+                                   
+                                    <div className="input-group-append"></div>
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary btn-block"
+                                    id="sidebar-btn"
+                                >
+                                    Search
+                                </button>
                         </form>
                         <div id="history">
                             {initialHistory.length && history.map((searchItem, index) => {
-                                if (index >=0 && index <=4){
-                                return(
-                                    <History
-                                    key ={index}
-                                    history = {searchItem}
-                                    getWeather = {getWeather}
-                                    changeSubmission = {setSubmission}
-                                    setLocalStorage = {setLocalStorage}
-                                    />
-                                )
-                            }
+                                if (index >= 0 && index <= 4) {
+                                    return (
+                                        <History
+                                            key={index}
+                                            history={searchItem}
+                                            getWeather={getWeather}
+                                            changeSubmission={setSubmission}
+                                            setLocalStorage={setLocalStorage}
+                                        />
+                                    )
+                                }
                             })}
                         </div>
                     </aside>
@@ -124,25 +150,25 @@ function Home() {
                                 alt={data.current.weather[0].description}
                             />
                         }
-<section id="weekly" className="weeklyForecast row">
-   {showWeather &&  <div className="col-12"><h4>5-Day Forecast</h4></div>
-}
-                        {showWeather && data.daily.map((day, index) => {
-                            if (index > 0 && index <= 5) {
-                                return (
-                                    <Forecast
-                                        key={index}
-                                        temp={day.temp.day}
-                                        humidity={day.humidity}
-                                        wind_speed={day.wind_speed}
-                                        icon={day.weather[0].icon}
-                                        alt={day.weather[0].description}
-                                        timezone={day.timezone}
-                                        date={day.dt}
-                                    />
-                                )
+                        <section id="weekly" className="weeklyForecast row">
+                            {showWeather && <div className="col-12"><h4>5-Day Forecast</h4></div>
                             }
-                        })}
+                            {showWeather && data.daily.map((day, index) => {
+                                if (index > 0 && index <= 5) {
+                                    return (
+                                        <Forecast
+                                            key={index}
+                                            temp={day.temp.day}
+                                            humidity={day.humidity}
+                                            wind_speed={day.wind_speed}
+                                            icon={day.weather[0].icon}
+                                            alt={day.weather[0].description}
+                                            timezone={day.timezone}
+                                            date={day.dt}
+                                        />
+                                    )
+                                }
+                            })}
                         </section>
 
                     </div>
